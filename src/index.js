@@ -1,18 +1,9 @@
 const { GraphQLServer } = require('graphql-yoga')
 
-// defines graphql schema
-const typeDefs = `
-  type Query {
-    info: String!
-    feed: [Link!]!
-  }
-
-  type Link {
-    id: ID!
-    description: String!
-    url: String!
-  }
-`
+// defines graphql schema (refactor)
+// const typeDefs = `
+//
+// `
 
 // store links
 let links = [{
@@ -21,12 +12,62 @@ let links = [{
   description: 'Fullstack tutorial for GraphQL'
 }]
 
+let idCount = links.length
+
 // actual implementation of graphql schema
 const resolvers = {
   Query: {
     info: () => `This is the API of a Hackernews Clone`,
-    feed: () => links
+    feed: () => links,
+    link: (root, args) => {
+      let match = {}
+      links.forEach(function(element) {
+        if (args.id === element.id) {
+          match = element
+        }
+      })
+      // console.log(match)
+      return match
+    }
   },
+  Mutation: {
+    post: (root, args) => {
+      const link = {
+        id: `link-${idCount++}`,
+        description: args.description,
+        url: args.url
+      }
+      links.push(link)
+      return link
+    },
+    updateLink: (root, args) => {
+      let match = {}
+      links.forEach(function(element) {
+        if (args.id === element.id) {
+          match["id"] = element.id
+          match["url"] = args.url
+          match["description"] = args.description
+        }
+      })
+      links.splice(match.id.split("-")[1], 1, match)
+      // console.log(links)
+      return match
+    },
+    deleteLink: (root, args) => {
+      var deleteIndex
+      let match = {}
+      links.forEach(function(element, index) {
+        if (args.id === element.id) {
+          deleteIndex = index
+        }
+      })
+      match = links[deleteIndex]
+      links.splice(deleteIndex, 1)
+      console.log(links)
+      return match
+    }
+  },
+  // Link resolver optional
   Link: {
     id: (root) => root.id,
     description: (root) => root.description,
@@ -37,7 +78,7 @@ const resolvers = {
 // schema and resolvers bundled and passed to graphqlserver, which is imported from graphql-yoga
 // tells server what API operations are accepted and how they should be resolved
 const server = new GraphQLServer({
-  typeDefs,
+  typeDefs: './src/schema.graphql',
   resolvers,
 })
 
