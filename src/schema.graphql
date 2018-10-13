@@ -13,6 +13,9 @@ type Mutation {
   updateLink(id: ID!, url: String, description: String): Link
   # Delete a link
   deleteLink(id: ID!): Link
+
+  signup(email: String!, password: String!, name: String!): AuthPayload
+  login(email: String!, password: String!): AuthPayload
 }
 
 # type Link {
@@ -20,3 +23,15 @@ type Mutation {
 #   description: String!
 #   url: String!
 # }
+
+type AuthPayload {
+  token: String
+  user: User
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  links: [Link!]!
+}
