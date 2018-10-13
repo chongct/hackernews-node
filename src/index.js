@@ -4,6 +4,7 @@ const { Prisma } = require('prisma-binding')
 const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutation')
 const AuthPayload = require('./resolvers/AuthPayload')
+const Subscription = require('./resolvers/Subscription')
 
 // defines graphql schema (refactor)
 // const typeDefs = `
@@ -101,7 +102,8 @@ const AuthPayload = require('./resolvers/AuthPayload')
 const resolvers = {
   Query,
   Mutation,
-  AuthPayload
+  AuthPayload,
+  Subscription
 }
 
 // schema and resolvers bundled and passed to graphqlserver, which is imported from graphql-yoga
