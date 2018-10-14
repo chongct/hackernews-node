@@ -20,7 +20,7 @@ services:
             migrations: true
   mysql:
     image: mysql:5.7
-    restart: always
+    restart: "no"
     environment:
       MYSQL_ROOT_PASSWORD: prisma
     volumes:

@@ -1,8 +1,8 @@
-# import Link, LinkSubscriptionPayload, Vote, VoteSubscriptionPayload from "./generated/prisma.graphql"
+# import Link, LinkSubscriptionPayload, Vote, VoteSubscriptionPayload, LinkOrderByInput from "./generated/prisma.graphql"
 
 type Query {
   info: String!
-  feed: [Link!]!
+  feed(filter: String, skip: Int, first: Int, orderBy: LinkOrderByInput): Feed!
   # Fetch a single link by its `id`
   link(id: ID!): Link
 }
@@ -41,4 +41,9 @@ type User {
 type Subscription {
   newLink: LinkSubscriptionPayload
   newVote: VoteSubscriptionPayload
+}
+
+type Feed {
+  links: [Link!]!
+  count: Int!
 }
